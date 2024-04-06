@@ -12,7 +12,10 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+
+      //alttaki satır main ts dosyasındaki templatenin uygulama tarafından okunmasını sağlar
+    //  'vue':'vue/dist/vue.esm-bundler'
     }
   }
 })
