@@ -1,6 +1,6 @@
 <template>
   <NavBar />
-  
+  <RouterView />
 </template>
 
 <script>
@@ -11,14 +11,12 @@ export default {
   components: {
     NavBar
   },
-  data(){
-    return {
-     
-    }
+  data() {
+    return {}
   }
 }
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Mulish:ital@0;1&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital@0;1&display=swap');
 </style>
