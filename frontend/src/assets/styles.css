@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital@0;1&display=swap');
+
+/*  Root Variable */
+:root {
+  --primary-color: #063547;
+  --secondary-color: #44b89d
+}
+
+/*  General Settings */
+a {
+  text-decoration: none;
+}
+
+/*  Custom Settings */
+.full-section-height {
+  min-height: calc(100vh - 130px);
+  display: flex;
+  align-items: center;
+}

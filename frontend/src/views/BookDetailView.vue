@@ -2,7 +2,7 @@
   <section>
     <div class="container">
       <SectionHeader :title="book.name" :text="book.author" />
-      <button>Back</button>
+      <font-awesome-icon icon="arrow-left" size="2xl" class="mb-2" style="cursor: pointer" @click="goToBackBooks"/>
       <div class="row mb-4">
         <div class="col-lg-6">
           <img class="card-img-top" src="../../bostorek/images/b1.jpg" />
@@ -38,7 +38,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <p class="mb-0 ps-0">Upvote</p>
+                      <font-awesome-icon :icon="['far','thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -52,7 +52,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <p class="mb-0 ps-0">Upvote</p>
+                      <font-awesome-icon :icon="['far','thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -66,7 +66,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <p class="mb-0 ps-0">Upvote</p>
+                      <font-awesome-icon :icon="['far','thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -80,7 +80,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <p class="mb-0 ps-0">Upvote</p>
+                      <font-awesome-icon :icon="['far','thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -94,7 +94,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <p class="mb-0 ps-0">Upvote</p>
+                      <font-awesome-icon :icon="['far','thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -125,6 +125,11 @@ export default {
     const bookId = this.$route.params.id
 
     this.book = books.find((book) => book.id == bookId)
+  },
+  methods:{
+    goToBackBooks(){
+      this.$router.push({name:"books"})
+    }
   }
 }
 </script>
