@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 @Schema()
 export class User extends Document {
@@ -15,7 +15,7 @@ export class User extends Document {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
+export const UserModel =  model('User', UserSchema);
 UserSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);
