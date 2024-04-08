@@ -1,0 +1,81 @@
+/* eslint-disable prettier/prettier */
+
+import { Body, Controller, Post, Logger, Get, Query } from '@nestjs/common';
+
+import { RegisterDto } from './dtos/register.dto';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { UserService } from './user.service';
+import { LoginDto } from './dtos/login.dto';
+import { jwtConstants } from 'src/consts/constants';
+
+@Controller('user')
+export class UserController {
+  private readonly logger = new Logger(UserController.name);
+  jwtService: any;
+
+  constructor(private readonly userService: UserService) {}
+
+  @Post('/register')
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiResponse({ status: 201, description: 'User registered successfully' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  async register(@Body() registerDto: RegisterDto) {
+    try {
+      return await this.userService.register(registerDto);
+    } catch (error) {
+      this.logger.error(`Registration failed: ${error.message}`, error.stack);
+      throw error; // Re-throw the error to be handled by NestJS's global exception filter
+    }
+  }
+
+  @Post('/login')
+  @ApiOperation({ summary: 'Log in a user' })
+  @ApiResponse({ status: 200, description: 'User logged in successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async login(@Body() loginDto: LoginDto) {
+    const user = await this.userService.validateUser(
+      loginDto.email,
+      loginDto.password,
+    );
+    if (!user) {
+      this.logger.warn(`Login failed for user: ${loginDto.email}`);
+      return { message: 'Invalid credentials' };
+    }
+    this.logger.log(`User logged in: ${loginDto.email}`);
+    // Ideally, you would generate and return a JWT token here
+    return { message: 'Login successful', user };
+  }
+
+  @Get('refresh')
+  @ApiOperation({ summary: 'Refresh access token' })
+  @ApiResponse({
+    status: 200,
+    description: 'Access token refreshed successfully',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async refresh(@Query('refresh_token') refreshToken: string) {
+    const accessToken = await this.userService.refreshToken(refreshToken);
+    if (!accessToken) {
+      this.logger.warn(`Refresh token failed`);
+      return { message: 'Invalid refresh token' };
+    }
+    return accessToken;
+  }
+
+  @Get('validateAccessToken')
+  @ApiOperation({ summary: 'Validate access token' })
+  @ApiResponse({ status: 200, description: 'Access token is valid' })
+  @ApiResponse({
+    status: 401,
+    description: 'Access token is invalid or expired',
+  })
+  async validateAccessToken(@Query('access_token') accessToken: string) {
+    try {
+      const isValid = await this.userService.validateAccessToken(accessToken);
+      return isValid;
+    } catch (error) {
+      return { valid: false };
+    }
+  }
+}
