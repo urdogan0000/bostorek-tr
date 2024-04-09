@@ -1,14 +1,13 @@
 /* eslint-disable prettier/prettier */
 
 import { Body, Controller, Post, Logger, Get, Query } from '@nestjs/common';
-
 import { RegisterDto } from './dtos/register.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { LoginDto } from './dtos/login.dto';
-import { jwtConstants } from 'src/consts/constants';
 
-@Controller('user')
+@ApiTags('user')
+@Controller('v1/user')
 export class UserController {
   private readonly logger = new Logger(UserController.name);
   jwtService: any;

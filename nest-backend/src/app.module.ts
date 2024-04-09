@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { RegisterModule } from './user/user.module';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
+import { BookModule } from './books/book.module';
 /*     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       imports: [GraphqlSchemaModule],
@@ -32,6 +33,7 @@ import { GraphQLModule } from '@nestjs/graphql';
     }),*/
 @Module({
   imports: [
+    BookModule,
     MongooseModule.forRoot(
       'mongodb+srv://test1:test1@cluster0.ya0reey.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
     ),
