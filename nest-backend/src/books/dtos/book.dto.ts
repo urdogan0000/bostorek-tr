@@ -18,14 +18,14 @@ export class BookDto {
   @IsOptional()
   description: string;
 
-  @ApiProperty({type: "number"})
+  @ApiProperty({ type: 'number', minimum: 1 })
   @IsNumber()
   @Min(1)
-  pageNumber: string;
+  pageNumber: number;
 
-  @ApiProperty({type:"number"})
+  @ApiProperty({ type: 'number', minimum: 0, maximum: 10 })
   @IsNumber()
   @Min(1)
   @Max(10)
-  rating: string;
+  rating: number;
 }

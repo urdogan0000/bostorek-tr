@@ -1,5 +1,4 @@
 import { HttpException, Logger } from '@nestjs/common';
-import { error } from 'console';
 import { Types } from 'mongoose';
 
 const checkIsValidObjectId = (id: string) => {
