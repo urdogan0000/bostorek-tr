@@ -7,7 +7,11 @@
       />
 
       <BookList :books="paginatedBooks" />
-      <PaginationComp :currentPage="currentPage" :totalPages="totalPages" @page-changed="updatePage" />
+      <PaginationComp
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        @page-changed="updatePage"
+      />
     </div>
   </section>
 </template>
@@ -16,7 +20,6 @@
 import BookList from '@/components/BookList.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import PaginationComp from '@/components/Pagination.vue'
-import books from '@/db'
 
 export default {
   name: 'BookView',
@@ -27,7 +30,7 @@ export default {
   },
   data() {
     return {
-      books: books,
+      books: [],
       currentPage: 1,
       itemPerPage: 8
     }
@@ -37,15 +40,30 @@ export default {
       return Math.ceil(this.books.length / this.itemPerPage)
     },
     paginatedBooks() {
-      const startIndex = (this.currentPage - 1) * this.itemPerPage;
-      const endIndex = startIndex + this.itemPerPage;
-      return this.books.slice(startIndex,endIndex)
+      const startIndex = (this.currentPage - 1) * this.itemPerPage
+      const endIndex = startIndex + this.itemPerPage
+      return this.books.slice(startIndex, endIndex)
     }
   },
-  methods:{
-    updatePage(page){
-        this.currentPage = page
+  methods: {
+    updatePage(page) {
+      this.currentPage = page
+    },
+
+    async fetchBooks() {
+      try {
+        const response = await fetch('http://localhost:3000/v1/books')
+        const data = await response.json()
+        console.log(data);
+        this.books = data
+        //return response
+      } catch (error) {
+        console.log(error)
+      }
     }
+  },
+  created() {
+    this.fetchBooks()
   }
 }
 </script>

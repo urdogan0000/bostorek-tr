@@ -1,8 +1,14 @@
 <template>
-  <section>
-    <div class="container">
-      <SectionHeader :title="book.name" :text="book.author" />
-      <font-awesome-icon icon="arrow-left" size="2xl" class="mb-2" style="cursor: pointer" @click="goToBackBooks"/>
+  <section style="min-height: calc(100vh - 130px); overflow: hidden">
+    <div class="container" v-if="!loading">
+      <SectionHeader :title="book.title" :text="book.author" />
+      <font-awesome-icon
+        icon="arrow-left"
+        size="2xl"
+        class="mb-2"
+        style="cursor: pointer"
+        @click="goToBackBooks"
+      />
       <div class="row mb-4">
         <div class="col-lg-6">
           <img class="card-img-top" src="../../bostorek/images/b1.jpg" />
@@ -14,7 +20,7 @@
           <div class="mb-4">
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Page</strong></div>
-              <div class="col-lg-6">{{book.page}}</div>
+              <div class="col-lg-6">{{ book.pageNumber }}</div>
             </div>
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Category</strong></div>
@@ -26,7 +32,7 @@
             </div>
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Upload Date</strong></div>
-              <div class="col-lg-6">{{book.uploadDate}}</div>
+              <div class="col-lg-6">{{ book.updatedAt }}</div>
             </div>
             <div class="mt-4 comments-section">
               <h3 class="display-6 mb-2">Comments</h3>
@@ -38,7 +44,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <font-awesome-icon :icon="['far','thumbs-up']" />
+                      <font-awesome-icon :icon="['far', 'thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -52,7 +58,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <font-awesome-icon :icon="['far','thumbs-up']" />
+                      <font-awesome-icon :icon="['far', 'thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -66,7 +72,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <font-awesome-icon :icon="['far','thumbs-up']" />
+                      <font-awesome-icon :icon="['far', 'thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -80,7 +86,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <font-awesome-icon :icon="['far','thumbs-up']" />
+                      <font-awesome-icon :icon="['far', 'thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -94,7 +100,7 @@
                   <div class="d-flex justify-content-between">
                     <p class="fw-bold fst-italic">John Doe</p>
                     <div class="d-flex align-items-center">
-                      <font-awesome-icon :icon="['far','thumbs-up']" />
+                      <font-awesome-icon :icon="['far', 'thumbs-up']" />
                       <p class="mb-0 ps-2"><strong>8</strong></p>
                     </div>
                   </div>
@@ -105,12 +111,15 @@
         </div>
       </div>
     </div>
+    <div class="container">
+      <p>Book Detail Loading</p>
+    </div>
   </section>
 </template>
 
 <script>
 import SectionHeader from '@/components/SectionHeader.vue'
-import books from '@/db'
+
 export default {
   name: 'BookDetailView',
   components: {
@@ -118,17 +127,31 @@ export default {
   },
   data() {
     return {
-      book: Object
+      book: null,
+      loading:true
     }
   },
-  created() {
-    const bookId = this.$route.params.id
+  async created() {
+    this.fetchAbook()
+    // const bookId = this.$route.params.id
 
-    this.book = books.find((book) => book.id == bookId)
+    // this.book = books.find((book) => book.id == bookId)
   },
-  methods:{
-    goToBackBooks(){
-      this.$router.push({name:"books"})
+  methods: {
+    goToBackBooks() {
+      this.$router.push({ name: 'books' })
+    },
+    async fetchAbook() {
+      const bookId = this.$route.params.id
+      try {
+        const response = await fetch('http://localhost:3000/v1/books/' + bookId)
+        const data = await response.json()
+        this.book = data
+        this.loading=false
+        console.log(this.book);
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
