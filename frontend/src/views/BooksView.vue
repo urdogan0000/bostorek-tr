@@ -54,7 +54,7 @@ export default {
       try {
         const response = await fetch('http://localhost:3000/v1/books')
         const data = await response.json()
-        console.log(data);
+
         this.books = data
         //return response
       } catch (error) {
