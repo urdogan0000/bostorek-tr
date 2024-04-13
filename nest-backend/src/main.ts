@@ -11,7 +11,19 @@ async function bootstrap() {
     .setDescription('Bostorek Api For Vue API')
     .setVersion('1.0')
     .addTag('Bostorek API Documentation')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth',
+    ) // This name here is important for matching up with @ApiBearerAuth() in your controller!
     .build();
+
   app.enableCors({ origin: '*', credentials: true });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   const document = SwaggerModule.createDocument(app, config);

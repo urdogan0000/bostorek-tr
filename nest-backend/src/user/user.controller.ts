@@ -1,11 +1,26 @@
 /* eslint-disable prettier/prettier */
 
-import { Body, Controller, Post, Logger, Get, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Logger,
+  Get,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { RegisterDto } from './dtos/register.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { LoginDto } from './dtos/login.dto';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
+@ApiBearerAuth('JWT-auth')
 @ApiTags('user')
 @Controller('v1/user')
 export class UserController {
@@ -46,6 +61,7 @@ export class UserController {
     return { message: 'Login successful', user };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('refresh')
   @ApiOperation({ summary: 'Refresh access token' })
   @ApiResponse({
@@ -62,6 +78,7 @@ export class UserController {
     return accessToken;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('validateAccessToken')
   @ApiOperation({ summary: 'Validate access token' })
   @ApiResponse({ status: 200, description: 'Access token is valid' })

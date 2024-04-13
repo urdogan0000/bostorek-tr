@@ -33,7 +33,10 @@ export class UserService {
   }
 
   async validateUser(email: string, password: string): Promise<any> {
+    console.log(email, password);
+    
     const user = await this.userRepository.findByEmail(email);
+
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { username: user.username, sub: user._id };
       return {
