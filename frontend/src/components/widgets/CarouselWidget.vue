@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  name: 'CarouselComp',
+  name: 'CarouselWidget',
   props: {
     items: {
       type: Array,

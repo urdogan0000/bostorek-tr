@@ -20,6 +20,8 @@
 import BookList from '@/components/BookList.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import PaginationComp from '@/components/Pagination.vue'
+import { useBookStore } from '@/stores/bookStore'
+import { mapState } from 'pinia'
 
 export default {
   name: 'BookView',
@@ -30,12 +32,12 @@ export default {
   },
   data() {
     return {
-      books: [],
       currentPage: 1,
       itemPerPage: 8
     }
   },
   computed: {
+    ...mapState(useBookStore, ['books']),
     totalPages() {
       return Math.ceil(this.books.length / this.itemPerPage)
     },
@@ -48,22 +50,10 @@ export default {
   methods: {
     updatePage(page) {
       this.currentPage = page
-    },
-
-    async fetchBooks() {
-      try {
-        const response = await fetch('http://localhost:3000/v1/books')
-        const data = await response.json()
-
-        this.books = data
-        //return response
-      } catch (error) {
-        console.log(error)
-      }
     }
   },
   created() {
-    this.fetchBooks()
+    //this.fetchBooks()
   }
 }
 </script>

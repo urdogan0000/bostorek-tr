@@ -1,6 +1,6 @@
 <template>
   <section>
-    <CarouselComp :items="carouselItems" :height="'400px'" />
+    <CarouselWidget :items="carouselItems" :height="'400px'" />
   </section>
   <section class="my-5" style="margin-bottom: 200px !important">
     <div class="container">
@@ -30,7 +30,8 @@
           </div>
         </div>
         <div class="col-md-8">
-          <div class="accordion">
+          <SpinnerWidget v-if="isLoading" />
+          <div v-else class="accordion">
             <div class="accordion-item" v-for="(book, index) in filteredBooks" :key="index">
               <h2 class="accordion-header">
                 <button
@@ -75,19 +76,23 @@
 
 <script>
 import SectionHeader from '@/components/SectionHeader.vue'
-import CarouselComp from '@/components/widgets/CarouselComp.vue'
+import CarouselWidget from '@/components/widgets/CarouselWidget.vue'
+import SpinnerWidget from '@/components/widgets/SpinnerWidget.vue'
 import hero_1 from '@/assets/images/hero_1.jpg'
 import hero_2 from '@/assets/images/hero_2.jpg'
 import hero_3 from '@/assets/images/hero_3.jpg'
+import { useBookStore } from '@/stores/bookStore'
+import { mapState } from 'pinia'
+
 export default {
   name: 'HomeView',
   components: {
-    CarouselComp,
-    SectionHeader
+    CarouselWidget,
+    SectionHeader,
+    SpinnerWidget
   },
   data() {
     return {
-      books: [],
       selectedFilter: 'latest',
       selectedItemIndex: 0,
       carouselItems: [
@@ -120,18 +125,6 @@ export default {
       this.selectedFilter = selectFilter
     },
 
-    async fetchBooks() {
-      try {
-        const response = await fetch('http://localhost:3000/v1/books')
-        const data = await response.json()
-
-        this.books = data
-        console.log('HomeView ...', this.books)
-        //return response
-      } catch (error) {
-        console.log(error)
-      }
-    },
     changeSelectedItem(index) {
       // This method toggles the accordion item between show and collapsed
       if (this.selectedItemIndex === index) {
@@ -142,10 +135,8 @@ export default {
     }
   },
 
-  created() {
-    this.fetchBooks()
-  },
   computed: {
+    ...mapState(useBookStore, ['books', 'isLoading']),
     filteredBooks() {
       const copiedBooks = [...this.books]
       if (this.selectedFilter === 'latest') {
@@ -175,7 +166,7 @@ export default {
   color: white;
 }
 
-.accordion-button:focus{
+.accordion-button:focus {
   outline: none;
   box-shadow: none;
 }
