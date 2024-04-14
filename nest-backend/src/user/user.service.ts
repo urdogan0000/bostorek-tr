@@ -22,6 +22,7 @@ export class UserService {
     try {
       const createdUser = await this.userRepository.create(registerBody);
       this.logger.log(`User registered successfully: ${createdUser.username}`);
+      createdUser.password = undefined;
       return createdUser;
     } catch (error) {
       this.logger.error(
@@ -34,17 +35,19 @@ export class UserService {
 
   async validateUser(email: string, password: string): Promise<any> {
     console.log(email, password);
-    
+
     const user = await this.userRepository.findByEmail(email);
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { username: user.username, sub: user._id };
+      user.password = undefined;
       return {
         access_token: this.jwtService.sign(payload),
         refresh_token: this.jwtService.sign(payload, {
           secret: jwtConstants.refreshTokenSecret,
           expiresIn: '7d',
         }),
+        user,
       };
     }
     return null;
