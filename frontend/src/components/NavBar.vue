@@ -9,13 +9,16 @@
         <li class="nav-item">
           <RouterLink class="nav-link" :to="{ name: 'books' }">Books</RouterLink>
         </li>
+        <li class="nav-item" v-if="isLoggedIn">
+          <RouterLink class="nav-link" :to="{ name: 'dashboard' }">DashBoard</RouterLink>
+        </li>
         <li class="nav-item">
           <RouterLink class="nav-link" :to="{ name: 'contact' }">Contact</RouterLink>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" v-if="!isLoggedIn">
           <RouterLink class="nav-link" :to="{ name: 'login' }">Login</RouterLink>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" v-if="!isLoggedIn">
           <RouterLink class="nav-link" :to="{ name: 'register' }">Register</RouterLink>
         </li>
       </ul>
@@ -24,19 +27,24 @@
 </template>
 
 <script>
+import { useAuthStore } from '@/stores/authStore'
+import { mapState } from 'pinia'
 export default {
   name: 'NavBar',
   data() {
     return {
       brandName: 'Bostorek'
     }
+  },
+  computed: {
+    ...mapState(useAuthStore, ['isLoggedIn'])
   }
 }
 </script>
 
 <style scoped>
 .custom-nav {
-  background-color: var(--primary-color);;
+  background-color: var(--primary-color);
   padding: 15px 0;
 }
 

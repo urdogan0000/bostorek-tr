@@ -44,6 +44,9 @@
 </template>
 
 <script>
+import { useAuthStore } from '@/stores/authStore'
+import { mapActions } from 'pinia'
+
 export default {
   name: 'LoginView',
   data() {
@@ -55,8 +58,15 @@ export default {
     }
   },
   methods: {
-    submitForm() {
-      console.log("Login",this.formData)
+    ...mapActions(useAuthStore, ['login']),
+    async submitForm() {
+      try {
+        await this.login(this.formData)
+        this.$router.push('/dashboard')
+        console.log('login successful')
+      } catch (error) {
+        console.log('login failed: ' + error)
+      }
     }
   }
 }

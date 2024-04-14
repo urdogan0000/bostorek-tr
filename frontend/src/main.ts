@@ -4,8 +4,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
-import { useBookStore } from './stores/bookStore'
-import { mapActions } from 'pinia'
+import { useBookStore } from '@/stores/bookStore'
+import { useAuthStore } from '@/stores/authStore'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -18,6 +18,12 @@ import { faThumbsUp } from '@fortawesome/free-regular-svg-icons'
 library.add(faArrowLeft, faThumbsUp)
 
 const pinia = createPinia()
+
+const storedUser = localStorage.getItem('user')
+if (storedUser) {
+  const userData = JSON.parse(storedUser)
+  useAuthStore(pinia).user = userData
+}
 
 const bookStore = useBookStore(pinia)
 
