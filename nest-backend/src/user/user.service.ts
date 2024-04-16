@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { User } from './schemas/user.schema';
 import {
   IUserRepository,
@@ -20,6 +20,16 @@ export class UserService {
 
   async register(registerBody: RegisterDto): Promise<User> {
     try {
+      const { email } = registerBody;
+      const isUserExist = await this.userRepository.findByEmail(email);
+      console.log(isUserExist);
+      if (isUserExist) {
+        throw new HttpException(
+          { message: 'user already exist ', status: 400 },
+          400,
+        );
+      }
+
       const createdUser = await this.userRepository.create(registerBody);
       this.logger.log(`User registered successfully: ${createdUser.username}`);
       createdUser.password = undefined;

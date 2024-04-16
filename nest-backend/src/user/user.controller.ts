@@ -58,7 +58,7 @@ export class UserController {
     }
     this.logger.log(`User logged in: ${loginDto.email}`);
     // Ideally, you would generate and return a JWT token here
-    return { message: 'Login successful', user };
+    return { message: 'Login successful', ...user };
   }
 
   @UseGuards(JwtAuthGuard)

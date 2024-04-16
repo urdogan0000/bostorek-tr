@@ -11,8 +11,12 @@ export class MongooseUserRepository implements IUserRepository {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async create(user: User): Promise<User> {
-    const newUser = new this.userModel(user);
-    return newUser.save();
+    try {
+      const newUser = new this.userModel(user);
+      return newUser.save();
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findByEmail(email: string): Promise<User | null> {
