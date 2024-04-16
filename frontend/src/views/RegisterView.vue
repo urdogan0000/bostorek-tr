@@ -8,6 +8,9 @@
         <div class="row justify-content-center">
           <!-- Username Field (Medium and Larger Screens) -->
           <div class="col-md-6 col-8 mb-3">
+            <div v-if="errorMessage" class="alert alert-danger">
+              {{ errorMessage }}
+            </div>
             <label for="username" class="form-label">Username</label>
             <span class="text-danger">*</span>
             <input
@@ -85,7 +88,7 @@
         <!-- Submit Button -->
         <div class="row justify-content-center">
           <div class="col-md-6 col-8 mb-3">
-            <button type="submit" class="btn btn-primary w-100" :disabled="!isFormValid">
+            <button type="submit" class="btn btn-primary w-100" :disabled="!isFormValid || loading">
               Register
             </button>
             <span class="text-danger" v-if="!isFormValid">* Please completE the field</span>
@@ -110,18 +113,23 @@ export default {
       },
       showUsernameWarningMessage: false,
       showEmailWarningMessage: false,
-      showPasswordWarningMessage: false
+      showPasswordWarningMessage: false,
+      loading: false,
+      errorMessage: ''
     }
   },
   methods: {
     ...mapActions(useAuthStore, ['register']),
     async submitForm() {
       try {
+        this.loading = true
         console.log(this.formData)
         await this.register(this.formData)
         this.$router.push('/login')
       } catch (error) {
-        console.log(error)
+        this.errorMessage = error.message || 'Failed to register. Please try again.'
+      } finally {
+        this.loading = false
       }
     }
   },
