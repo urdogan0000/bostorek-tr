@@ -1,6 +1,5 @@
 <template>
-  <h1>{{ user.username }}</h1>
-  <h2>{{ user.email }}</h2>
+  <h1>{{ user }}</h1>
 </template>
 
 <script>
@@ -12,8 +11,7 @@ export default {
   methods: {},
   computed: {
     ...mapState(useAuthStore, ['user'])
- 
-  },
+  }
 }
 </script>
 
