@@ -11,9 +11,15 @@
               class="form-control"
               id="email"
               name="email"
+              autocomplete="off"
               v-model.trim="formData.email"
               required
+              @focus="showEmailWarningMessage = true"
+              @blur="showEmailWarningMessage = false"
             />
+            <span class="text-danger small" v-if="showEmailWarningMessage">
+              Email must be valid
+            </span>
           </div>
         </div>
 
@@ -28,7 +34,12 @@
               name="password"
               v-model.trim="formData.password"
               required
+              @focus="showPasswordWarningMessage = true"
+              @blur="showPasswordWarningMessage = false"
             />
+            <span class="text-danger small" v-if="showPasswordWarningMessage">
+              Password must be valid
+            </span>
           </div>
         </div>
 
@@ -46,7 +57,8 @@
 <script>
 import { useAuthStore } from '@/stores/authStore'
 import { mapActions } from 'pinia'
-
+import { useToast } from 'vue-toastification'
+const toast = useToast()
 export default {
   name: 'LoginView',
   data() {
@@ -54,7 +66,10 @@ export default {
       formData: {
         email: '',
         password: ''
-      }
+      },
+      showEmailWarningMessage: false,
+      showPasswordWarningMessage: false,
+      errorMessage: ''
     }
   },
   methods: {
@@ -62,10 +77,19 @@ export default {
     async submitForm() {
       try {
         await this.login(this.formData)
-        this.$router.push('/dashboard')
-        console.log('login successful')
+        toast.success('you will be redirected to do Login page', {
+          timeout: 2000,
+          pauseOnHover: true,
+          icon: 'fas fa-rocket',
+          closeButton: 'button'
+        })
+
+        setTimeout(() => {
+          this.$router.push('/dashboard')
+        }, 3000)
       } catch (error) {
-        console.log('login failed: ' + error)
+        this.errorMessage = error.message || 'Failed to login'
+        toast.error(this.errorMessage)
       }
     }
   }

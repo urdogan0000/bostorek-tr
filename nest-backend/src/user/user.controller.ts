@@ -8,6 +8,7 @@ import {
   Get,
   Query,
   UseGuards,
+  HttpException,
 } from '@nestjs/common';
 import { RegisterDto } from './dtos/register.dto';
 import {
@@ -54,7 +55,7 @@ export class UserController {
     );
     if (!user) {
       this.logger.warn(`Login failed for user: ${loginDto.email}`);
-      return { message: 'Invalid credentials' };
+      throw new HttpException('invalid credentials', 400);
     }
     this.logger.log(`User logged in: ${loginDto.email}`);
     // Ideally, you would generate and return a JWT token here

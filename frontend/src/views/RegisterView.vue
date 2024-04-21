@@ -5,7 +5,7 @@
         <h1 class="display-3">Register</h1>
       </div>
       <form class="mt-5" @submit.prevent="submitForm">
-        <div class="row justify-content-center ">
+        <div class="row justify-content-center">
           <div class="col-md-7 col-8 mb-3">
             <div v-if="errorMessage" class="alert alert-danger">
               {{ errorMessage }}
@@ -91,6 +91,7 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import { useToast } from 'vue-toastification'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 
@@ -102,6 +103,7 @@ const formData = reactive({
   email: '',
   password: ''
 })
+const toast = useToast()
 
 const showUsernameWarningMessage = ref(false)
 const showEmailWarningMessage = ref(false)
@@ -125,7 +127,16 @@ async function submitForm() {
   loading.value = true
   try {
     await authStore.register(formData)
-    router.push('/login')
+    toast.success('you will be redirected to do Login page', {
+      timeout: 2000,
+      pauseOnHover: true,
+      icon: 'fas fa-rocket',
+      closeButton: 'button'
+    })
+
+    setTimeout(() => {
+      router.push('/login')
+    }, 4000)
   } catch (error) {
     errorMessage.value = error.message || 'Failed to register. Please try again.'
   } finally {
@@ -135,22 +146,5 @@ async function submitForm() {
 </script>
 
 <style scoped>
-.form-control {
-  border-radius: 25px;
-  height: 48px;
-}
-.form-control:focus {
-  box-shadow: none;
-}
-.btn-primary {
-  border-radius: 25px;
-  height: 45px;
-  background-color: var(--secondary-color);
-  border: 1px solid var(--secondary-color);
-}
-.btn:hover {
-  background-color: aliceblue;
-  color: var(--secondary-color);
-  transition: all 0.3s ease;
-}
+
 </style>

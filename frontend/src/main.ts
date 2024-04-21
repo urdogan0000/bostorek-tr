@@ -1,5 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './assets/styles.css'
+import Toast, { type PluginOptions } from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -16,6 +19,10 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { faThumbsUp } from '@fortawesome/free-regular-svg-icons'
 
 library.add(faArrowLeft, faThumbsUp)
+const options:PluginOptions = {
+  
+};
+
 
 const pinia = createPinia()
 
@@ -31,7 +38,7 @@ bookStore.fetchBooks().then(() => {
   const app = createApp(App)
   app.component('font-awesome-icon', FontAwesomeIcon)
   app.use(pinia).use(router)
-
+  app.use(Toast, options);
   app.mount('#app')
 })
 

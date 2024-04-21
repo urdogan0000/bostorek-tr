@@ -37,11 +37,22 @@ export const useAuthStore = defineStore('authStore', {
         console.log('newUserData', loginData)
 
         const response = await axios.post('http://localhost:3000/v1/user/login', loginData)
+
         this.user = response.data.user
-        console.log(response)
+
         localStorage.setItem('user', JSON.stringify(response.data.user.user))
-      } catch (error) {
-        console.log('error at getting user', error)
+      } catch (error: any) {
+        console.error('Error during login:', error)
+
+        // Check if the error structure is as expected before throwing specific parts
+        if (error?.response && error?.response?.data) {
+          throw error?.response?.data
+        } else {
+          console.log(error)
+
+          // Fallback error handling if the expected error structure is not present
+          throw new Error('An unexpected error occurred during registration')
+        }
       }
     },
     logout() {
