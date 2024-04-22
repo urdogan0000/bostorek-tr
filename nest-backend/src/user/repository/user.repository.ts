@@ -22,4 +22,8 @@ export class MongooseUserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     return this.userModel.findOne({ email });
   }
+  
+  async update(id: string, user: Partial<User>): Promise<User> {
+    return this.userModel.findByIdAndUpdate(id, user, { new: true }).exec();
+  }
 }

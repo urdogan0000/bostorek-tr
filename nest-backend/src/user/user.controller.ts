@@ -9,10 +9,13 @@ import {
   Query,
   UseGuards,
   HttpException,
+  Param,
+  Patch,
 } from '@nestjs/common';
 import { RegisterDto } from './dtos/register.dto';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -20,6 +23,7 @@ import {
 import { UserService } from './user.service';
 import { LoginDto } from './dtos/login.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { User } from './schemas/user.schema';
 
 @ApiBearerAuth('JWT-auth')
 @ApiTags('user')
@@ -42,6 +46,21 @@ export class UserController {
       this.logger.error(`Registration failed: ${error.message}`, error.stack);
       throw error; // Re-throw the error to be handled by NestJS's global exception filter
     }
+  }
+
+  @Patch(':id')
+  @ApiBody({
+    type: RegisterDto,
+  })
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiResponse({ status: 200, description: 'User succesfully updatedy' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  async updateUser(
+    @Param('id') id: string,
+    @Body() updateData: Partial<RegisterDto>,
+  ) {
+    return this.userService.updateUser(id, updateData);
   }
 
   @Post('/login')

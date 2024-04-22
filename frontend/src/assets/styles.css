@@ -30,6 +30,7 @@ a {
   height: 45px;
   background-color: var(--secondary-color) !important;
   border: 1px solid var(--secondary-color) !important;
+  min-width: 175px;
 }
 .btn:hover {
   background-color: aliceblue !important;

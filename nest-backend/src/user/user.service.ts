@@ -90,4 +90,15 @@ export class UserService {
       return { valid: false };
     }
   }
+  async updateUser(userId: string, updateData: Partial<User>): Promise<User> {
+    try {
+      const updatedUser = await this.userRepository.update(userId, updateData);
+      this.logger.log(`User updated successfully: ${updatedUser.username}`);
+      updatedUser.password = undefined;
+      return updatedUser;
+    } catch (error) {
+      this.logger.error(`User update failed: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
 }
