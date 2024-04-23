@@ -64,7 +64,7 @@ import DashBoardGeneral from '@/components/dashboard/DashBoardGeneral.vue'
 import DashBoardBooks from '@/components/dashboard/DashBoardBooks.vue'
 import { ref } from 'vue'
 
-const activeTab = ref('general')
+const activeTab = ref('books')
 </script>
 
 <style scoped>

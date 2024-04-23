@@ -2,7 +2,7 @@
   <!-- Button -->
   <div class="row mb-3">
     <div class="col text-end">
-      <button type="button" class="btn btn-primary">Add Book</button>
+      <button type="button" class="btn btn-primary" @click="modal.show()">Add Book</button>
     </div>
   </div>
 
@@ -51,12 +51,12 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" ref="addEditModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="addModalLabel">Add Book</h5>
-          <button type="button" class="btn-close" aria-label="Close"></button>
+          <button type="button" class="btn-close" aria-label="Close" @click="modal.hide()"></button>
         </div>
         <div class="modal-body mx-5">
           <div class="col mb-3">
@@ -93,8 +93,8 @@
             </label>
             <input type="number" class="form-control" id="numOfPages" name="numOfPages" required />
           </div>
-          <div class="text-end">
-            <button type="button" class="btn btn-outline-secondary">Close</button>
+          <div class="text-end mb-4">
+            <button type="button" class="btn btn-outline-secondary" @click="modal.hide()">Close</button>
             <button type="button" class="btn btn-primary">Save</button>
           </div>
         </div>
@@ -104,15 +104,28 @@
 </template>
 
 <script>
+import { Modal } from 'bootstrap'
 export default {
-  name: 'DashboardBooks',
+  name: 'DashBoardBooks',
   components: {},
   data() {
-    return
+    return {
+      modal: null
+    }
+  },
+  mounted() {
+    this.modal = new Modal(this.$refs.addEditModal)
   },
 
   methods: {}
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.btn-outline-secondary {
+  border-radius: 25px;
+  height: 48px;
+  margin-right:  20px;
+  min-width: 120px;
+}
+</style>
