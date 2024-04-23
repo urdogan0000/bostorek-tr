@@ -10,6 +10,7 @@ import { RegisterDto } from './dtos/register.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/consts/constants';
+import { checkIsValidObjectId } from 'src/utils/commmon.func';
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
@@ -92,6 +93,15 @@ export class UserService {
   }
   async updateUser(userId: string, updateData: Partial<User>): Promise<User> {
     try {
+      checkIsValidObjectId(userId);
+
+      if (updateData.password && updateData.password.trim().length > 5) {
+        updateData.password = await bcrypt.hash(updateData.password, 10);
+      } else {
+        delete updateData.password;
+      }
+
+      delete updateData.password;
       const updatedUser = await this.userRepository.update(userId, updateData);
       this.logger.log(`User updated successfully: ${updatedUser.username}`);
       updatedUser.password = undefined;

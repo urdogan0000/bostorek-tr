@@ -23,7 +23,6 @@ import {
 import { UserService } from './user.service';
 import { LoginDto } from './dtos/login.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { User } from './schemas/user.schema';
 
 @ApiBearerAuth('JWT-auth')
 @ApiTags('user')
@@ -48,6 +47,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiBody({
     type: RegisterDto,
