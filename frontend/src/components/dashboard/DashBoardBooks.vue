@@ -64,14 +64,28 @@
               >Title
               <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control" id="title" name="title" required />
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              required
+              v-model="newBook.title"
+            />
           </div>
           <div class="col mb-3">
             <label for="author" class="form-label"
               >Author
               <span class="text-danger">*</span>
             </label>
-            <input type="text" class="form-control" id="author" name="author" required />
+            <input
+              type="text"
+              class="form-control"
+              id="author"
+              name="author"
+              required
+              v-model="newBook.author"
+            />
           </div>
           <div class="col mb-3">
             <label for="description" class="form-label"
@@ -84,6 +98,7 @@
               class="form-control"
               cols="30"
               rows="10"
+              v-model="newBook.description"
             ></textarea>
           </div>
           <div class="col mb-3">
@@ -91,11 +106,20 @@
               >Number of Pages
               <span class="text-danger">*</span>
             </label>
-            <input type="number" class="form-control" id="numOfPages" name="numOfPages" required />
+            <input
+              type="number"
+              class="form-control"
+              id="numOfPages"
+              name="numOfPages"
+              required
+              v-model="newBook.pageNumber"
+            />
           </div>
           <div class="text-end mb-4">
-            <button type="button" class="btn btn-outline-secondary" @click="modal.hide()">Close</button>
-            <button type="button" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-outline-secondary" @click="modal.hide()">
+              Close
+            </button>
+            <button @click="addBook" type="button" class="btn btn-primary">Save</button>
           </div>
         </div>
       </div>
@@ -105,19 +129,39 @@
 
 <script>
 import { Modal } from 'bootstrap'
+import { mapActions } from 'pinia'
+import { useBookStore } from '@/stores/bookStore'
 export default {
   name: 'DashBoardBooks',
   components: {},
   data() {
     return {
-      modal: null
+      modal: null,
+      newBook: {
+        title: '',
+        author: '',
+        description: '',
+        pageNumber: null,
+      }
     }
   },
   mounted() {
     this.modal = new Modal(this.$refs.addEditModal)
   },
 
-  methods: {}
+  methods: {
+    ...mapActions(useBookStore, ['addBooks']),
+    async addBook() {
+      try {
+        const book = await this.addBooks(this.newBook)
+        console.log(book)
+        this.modal.hide()
+        return book
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 }
 </script>
 
@@ -125,7 +169,7 @@ export default {
 .btn-outline-secondary {
   border-radius: 25px;
   height: 48px;
-  margin-right:  20px;
+  margin-right: 20px;
   min-width: 120px;
 }
 </style>

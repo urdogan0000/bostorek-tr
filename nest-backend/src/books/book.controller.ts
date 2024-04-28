@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-
 import {
   Controller,
   Logger,
@@ -9,12 +8,15 @@ import {
   Delete,
   Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { UserInfo } from 'src/consts/custom.decarator';
 
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BookService } from './book.service';
 import { BookDto } from './dtos/book.dto';
 import { Book } from './schemas/book.schema';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('books')
 @Controller('v1/books')
@@ -23,7 +25,6 @@ export class BookController {
   jwtService: any;
 
   constructor(private readonly bookService: BookService) {}
-
 
   @Get(':id')
   async findOneById(@Param('id') id: string): Promise<Book> {
@@ -47,12 +48,16 @@ export class BookController {
   }
 
   @Post('/')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'create a new book' })
   @ApiResponse({ status: 201, description: 'create a new book successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  async create(@Body() bookDto: BookDto) {
+  async create(@Body() bookDto: BookDto, @UserInfo() userInfo: any) {
     try {
+      console.log(userInfo);
+      bookDto['uploader'] = userInfo.id;
+
       return await this.bookService.create(bookDto);
     } catch (error) {
       this.logger.error(`Registration failed: ${error.message}`);

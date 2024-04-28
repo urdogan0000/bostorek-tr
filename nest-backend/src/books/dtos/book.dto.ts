@@ -2,7 +2,7 @@
 // src/login/dto/login.dto.ts
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class BookDto {
   @ApiProperty()
@@ -22,10 +22,4 @@ export class BookDto {
   @IsNumber()
   @Min(1)
   pageNumber: number;
-
-  @ApiProperty({ type: 'number', minimum: 0, maximum: 10 })
-  @IsNumber()
-  @Min(1)
-  @Max(10)
-  rating: number;
 }

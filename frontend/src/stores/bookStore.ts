@@ -24,6 +24,16 @@ export const useBookStore = defineStore('bookStore', {
       } finally {
         this.isLoading = false
       }
+    },
+
+    async addBooks(addBookDto: any) {
+      try {
+        const response = await axios.post('http://localhost:3000/v1/books', addBookDto)
+        this.books.push(response.data as BookType as never)
+        return response.data
+      } catch (error) {
+        console.log('error at at new books', error)
+      }
     }
   }
 })

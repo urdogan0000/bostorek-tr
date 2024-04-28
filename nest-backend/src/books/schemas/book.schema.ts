@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 @Schema({timestamps:true})
 export class Book extends Document {
@@ -16,8 +16,8 @@ export class Book extends Document {
   @Prop({ min: 1 })
   pageNumber: number;
 
-  @Prop({ min: 0, required: true, max: 10 })
-  rating: number;
+  @Prop({ type:mongoose.Schema.Types.ObjectId,ref:'User',required:true })
+  uploader;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

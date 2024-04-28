@@ -21,10 +21,22 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   handleRequest(err, user, info, context) {
+    const request = context.switchToHttp().getRequest();
+
     if (err || !user) {
       // Throw an unauthorized exception if user is not authenticated
       throw err || new UnauthorizedException();
     }
+
+    request.headers['user-info'] = JSON.stringify(this.extractUserInfo(user));
+
     return user;
+  }
+  private extractUserInfo(user: any): any {
+    // Simplify the user object as needed
+    return {
+      id: user.userId,
+      username: user.username,
+    };
   }
 }

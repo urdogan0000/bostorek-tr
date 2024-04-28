@@ -39,10 +39,14 @@ export const useAuthStore = defineStore('authStore', {
         const response = await axios.post('http://localhost:3000/v1/user/login', loginData)
         console.log('login response', response)
 
+        const token=response.data.access_token
+
         this.user = response.data.user
 
-        localStorage.setItem('user', JSON.stringify(response.data.user))
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`
+
+
+        localStorage.setItem('user', JSON.stringify(response.data))
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       } catch (error: any) {
         console.error('Error during login:', error)
 
